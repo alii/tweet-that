@@ -3,7 +3,7 @@ import {apiKey, apiSecret, accessTokenSecret, accessToken} from "../constants";
 import {redis} from "./redis";
 import {prisma} from "./prisma";
 
-export const twitterClient = new TwitterClient({
+export const twitter = new TwitterClient({
   apiKey,
   apiSecret,
   accessToken,
@@ -11,10 +11,10 @@ export const twitterClient = new TwitterClient({
 });
 
 export async function generateAuthUrl(id: string): Promise<string> {
-  const token = await twitterClient.basics.oauthRequestToken();
-  const url = "https://api.twitter.com/oauth/authorize?oauth_token=" + token.oauth_token;
+  const token = await twitter.basics.oauthRequestToken();
   await redis.set(`oauth:${token.oauth_token}`, `${token.oauth_token_secret}:${id}`, "ex", 120);
-  return url;
+
+  return `https://api.twitter.com/oauth/authorize?oauth_token=${token.oauth_token}`;
 }
 
 export async function findTwitterUser(user_id: string | undefined): Promise<UsersLookup[]> {
@@ -23,16 +23,17 @@ export async function findTwitterUser(user_id: string | undefined): Promise<User
   });
 }
 
-export const generateTweetClient = async (id: string): Promise<TwitterClient> => {
-  console.log(id);
+export async function generateTweetClient(id: string): Promise<TwitterClient> {
   const user = await prisma.user.findFirst({where: {discord_id: id}});
+
   if (!user) {
     throw new Error("Cannot find that user");
   }
+
   return new TwitterClient({
     apiKey,
     apiSecret,
     accessToken: user.oauth_token,
     accessTokenSecret: user.oauth_token_secret,
   });
-};
+}
