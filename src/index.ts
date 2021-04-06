@@ -72,7 +72,7 @@ client.on("message", async message => {
       await inhibitor(message, args);
     }
 
-    await command.run(message);
+    await command.run(message, args);
   } catch (e) {
     await message.reply(`⚠ ${e.message}`);
   }
