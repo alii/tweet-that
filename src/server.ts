@@ -2,12 +2,19 @@ import fastify from "fastify";
 import {redis} from "./services/redis";
 import {callbackSchema} from "./services/schemas";
 import {twitter} from "./services/twitter";
-import {prisma} from "./services/prisma";
+import {findOneByUidAndDiscordId, prisma} from "./services/prisma";
+import fs from "fs";
 
 const app = fastify();
 
 app.get("/callback", async (req, res) => {
-  const {oauth_token, oauth_verifier} = callbackSchema.parse(req.query);
+  const query = callbackSchema.safeParse(req.query);
+
+  if (!query.success) {
+    return res.type("text/html").send(fs.readFileSync("../public/error.html"));
+  }
+
+  const {oauth_token, oauth_verifier} = query.data;
 
   const redisToken = await redis.get(`oauth:${oauth_token}`);
   if (!redisToken) {
@@ -19,9 +26,7 @@ app.get("/callback", async (req, res) => {
   const twitterAuth = await twitter.basics.oauthAccessToken({oauth_verifier, oauth_token});
   const discord_id = redisToken.substr(redisToken.lastIndexOf(":") + 1);
 
-  const existingUser = await prisma.user.findFirst({
-    where: {AND: [{discord_id}, {uid: twitterAuth.user_id}]},
-  });
+  const existingUser = await findOneByUidAndDiscordId(discord_id, twitterAuth.user_id);
 
   if (existingUser) {
     res.send("Already exisiting user");
@@ -37,7 +42,7 @@ app.get("/callback", async (req, res) => {
     },
   });
 
-  res.send("Have a nice day, Twitter");
+  res.send("You may now close the tab");
 });
 
 export async function start(): Promise<void> {
