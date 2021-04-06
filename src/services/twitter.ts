@@ -17,10 +17,8 @@ export async function generateAuthUrl(id: string): Promise<string> {
   return `https://api.twitter.com/oauth/authorize?oauth_token=${token.oauth_token}`;
 }
 
-export async function findTwitterUser(user_id: string | undefined): Promise<UsersLookup[]> {
-  return await twitter.accountsAndUsers.usersLookup({
-    user_id,
-  });
+export function findTwitterUser(user_id: string | undefined): Promise<UsersLookup[]> {
+  return twitter.accountsAndUsers.usersLookup({user_id});
 }
 
 export async function generateTweetClient(id: string): Promise<TwitterClient> {
