@@ -23,21 +23,15 @@ export const tweet: Command = {
 
     const foundUser = await findOneByDiscordId(foundMessage.author.id);
 
-    const twitterUser = (await findTwitterUser(foundUser?.uid))[0];
+    const twitterUser = foundUser ? (await findTwitterUser(foundUser?.uid))[0] : null;
 
-    const tweet = await client.tweets
-      .statusesUpdate({
-        status: twitterUser
-          ? `@${twitterUser["screen_name"] + " " + foundMessage.content}`
-          : foundMessage.content,
-      })
-      .catch(() => null);
+    const tweet = await client.tweets.statusesUpdate({
+      status: twitterUser
+        ? `@${twitterUser["screen_name"] + " " + foundMessage.content}`
+        : foundMessage.content,
+    });
 
-    if (tweet) {
-      await foundMessage.react("<:twitter:829103050132029461>");
-      await message.reply("Tweeted that!");
-    } else {
-      await message.reply("Couldn't Tweet that!");
-    }
+    await foundMessage.react("<:twitter:829103050132029461>");
+    await message.reply(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
   },
 };
