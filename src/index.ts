@@ -7,8 +7,10 @@ import {prisma} from "./services/prisma";
 import {redis} from "./services/redis";
 import {isDev} from "./constants";
 import signale from "signale";
+import {start} from "./server";
 
 const client = new Client();
+
 const prefix = process.env.PREFIX || "--";
 
 client.on("ready", () => {
@@ -16,7 +18,7 @@ client.on("ready", () => {
   signale.success("Ready as", client.user?.tag);
 });
 
-client.on("message", async message => {
+client.on("message", async (message: any) => {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
@@ -78,6 +80,8 @@ client.on("message", async message => {
 
 prisma.$connect().then(async () => {
   signale.info("Connected to Database");
+  await start();
+  signale.info("http ready");
   await redis.connect();
   signale.info("Connected to Redis");
   await client.login(process.env.DISCORD_TOKEN);
