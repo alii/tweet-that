@@ -11,6 +11,8 @@ generator client {
 }
 
 model User {
-  discord_id String @id
-  score      Int    @default(0)
+  discord_id         String @id
+  uid                String
+  oauth_token        String
+  oauth_token_secret String
 }

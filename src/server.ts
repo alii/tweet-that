@@ -14,8 +14,27 @@ app.get("/callback", async (req, res) => {
     throw new Error("Cannot find redis token");
   }
   //@ts-ignore
-  const something = await twitterClient.basics.oauthAccessToken({oauth_verifier, oauth_token});
-  res.send("pog");
+  const twitterAuth = await twitterClient.basics.oauthAccessToken({oauth_verifier, oauth_token});
+  const discord_id = redisToken.substr(redisToken.lastIndexOf(":"));
+  const existingUser = await prisma.user.findFirst({
+    where: {AND: [{discord_id}, {uid: twitterAuth.user_id}]},
+  });
+
+  if (existingUser) {
+    res.send("Already exisiting user");
+    return;
+  }
+
+  await prisma.user.create({
+    data: {
+      discord_id,
+      uid: twitterAuth.user_id,
+      oauth_token: twitterAuth.oauth_token,
+      oauth_token_secret: twitterAuth.oauth_token_secret,
+    },
+  });
+
+  res.send("Have a nice day, Twitter");
 });
 
 export const start = async () => {
