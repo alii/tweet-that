@@ -1,20 +1,12 @@
 import {Command} from "../types/command";
 import {login} from "./twitter/login";
-import {tweet} from "./twitter/tweetThat";
+import {tweet} from "./twitter/tweet";
 import {ping} from "./util/ping";
-import {redisExample} from "./util/redis-example";
 
-/**
- * An array of all commands available for the bot.
- * To register a command, all you have to do is place it in this array
- */
-export const commands: Command[] = [ping, redisExample, login, tweet];
+export const commands: Command[] = [ping, login, tweet];
 
 const commandsWithAliases = commands.reduce((all, command) => {
-  // Dedupe aliases
-  const aliases = [...new Set(command.aliases)];
-
-  return aliases.reduce((previous, commandName) => {
+  return [...new Set(command.aliases)].reduce((previous, commandName) => {
     return {...previous, [commandName]: command};
   }, all);
 }, {} as Record<string, Command>);

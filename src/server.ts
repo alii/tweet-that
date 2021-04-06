@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import {redis} from "./services/redis";
 import {callbackSchema} from "./services/schemas";
-import {twitterClient} from "./services/twitter";
+import {twitter} from "./services/twitter";
 import {prisma} from "./services/prisma";
 
 const app = fastify();
@@ -13,9 +13,12 @@ app.get("/callback", async (req, res) => {
   if (!redisToken) {
     throw new Error("Cannot find redis token");
   }
-  //@ts-ignore
-  const twitterAuth = await twitterClient.basics.oauthAccessToken({oauth_verifier, oauth_token});
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore Lib typings are wrong!
+  const twitterAuth = await twitter.basics.oauthAccessToken({oauth_verifier, oauth_token});
   const discord_id = redisToken.substr(redisToken.lastIndexOf(":") + 1);
+
   const existingUser = await prisma.user.findFirst({
     where: {AND: [{discord_id}, {uid: twitterAuth.user_id}]},
   });
@@ -37,10 +40,10 @@ app.get("/callback", async (req, res) => {
   res.send("Have a nice day, Twitter");
 });
 
-export const start = async () => {
+export async function start(): Promise<void> {
   try {
     await app.listen(3000);
   } catch (err) {
     app.log.error(err);
   }
-};
+}

@@ -18,7 +18,7 @@ client.on("ready", () => {
   signale.success("Ready as", client.user?.tag);
 });
 
-client.on("message", async (message: any) => {
+client.on("message", async message => {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
@@ -72,7 +72,7 @@ client.on("message", async (message: any) => {
       await inhibitor(message, args);
     }
 
-    await command.run(message, args);
+    await command.run(message);
   } catch (e) {
     await message.reply(`⚠ ${e.message}`);
   }
