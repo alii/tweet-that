@@ -15,7 +15,7 @@ app.get("/callback", async (req, res) => {
   }
   //@ts-ignore
   const twitterAuth = await twitterClient.basics.oauthAccessToken({oauth_verifier, oauth_token});
-  const discord_id = redisToken.substr(redisToken.lastIndexOf(":"));
+  const discord_id = redisToken.substr(redisToken.lastIndexOf(":") + 1);
   const existingUser = await prisma.user.findFirst({
     where: {AND: [{discord_id}, {uid: twitterAuth.user_id}]},
   });
