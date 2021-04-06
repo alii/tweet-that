@@ -15,10 +15,6 @@ export const tweet: Command = {
 
     const foundMessage = await message.channel.messages.fetch(messageId);
 
-    if (!foundMessage) {
-      return;
-    }
-
     const client = await generateTweetClient(message.author.id);
 
     const foundUser = await findOneByDiscordId(foundMessage.author.id);
