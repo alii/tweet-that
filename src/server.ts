@@ -4,14 +4,18 @@ import {callbackSchema} from "./services/schemas";
 import {twitter} from "./services/twitter";
 import {findOneByUidAndDiscordId, prisma} from "./services/prisma";
 import fs from "fs";
+import path from "path";
 
 const app = fastify();
+
+const cwd = process.cwd();
 
 app.get("/callback", async (req, res) => {
   const query = callbackSchema.safeParse(req.query);
 
   if (!query.success) {
-    return res.type("text/html").send(fs.readFileSync("../public/error.html"));
+    const page = fs.readFileSync(path.join(cwd, "public", "error.html"));
+    return res.type("text/html").send(page);
   }
 
   const {oauth_token, oauth_verifier} = query.data;
