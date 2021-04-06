@@ -24,6 +24,7 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "fastify": "^3.14.1",
+    "fastify-static": "^4.0.1",
     "ioredis": "^4.24.2",
     "node-fetch": "^2.6.1",
     "signale": "^1.4.0",

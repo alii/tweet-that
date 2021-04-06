@@ -3,19 +3,18 @@ import {redis} from "./services/redis";
 import {callbackSchema} from "./services/schemas";
 import {twitter} from "./services/twitter";
 import {findOneByUidAndDiscordId, prisma} from "./services/prisma";
-import fs from "fs";
+import fastifyStatic from "fastify-static";
 import path from "path";
 
 const app = fastify();
 
-const cwd = process.cwd();
+app.register(fastifyStatic, {root: path.join(__dirname, "public")});
 
 app.get("/callback", async (req, res) => {
   const query = callbackSchema.safeParse(req.query);
 
   if (!query.success) {
-    const page = fs.readFileSync(path.join(cwd, "public", "error.html"));
-    return res.type("text/html").send(page);
+    return res.sendFile("error.html");
   }
 
   const {oauth_token, oauth_verifier} = query.data;
