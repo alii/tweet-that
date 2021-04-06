@@ -1,7 +1,7 @@
 import {TwitterClient, UsersLookup} from "twitter-api-client";
 import {apiKey, apiSecret, accessTokenSecret, accessToken} from "../constants";
 import {redis} from "./redis";
-import {prisma} from "./prisma";
+import {findOneByDiscordId, prisma} from "./prisma";
 
 export const twitter = new TwitterClient({
   apiKey,
@@ -11,6 +11,10 @@ export const twitter = new TwitterClient({
 });
 
 export async function generateAuthUrl(id: string): Promise<string> {
+  const exisiting = await findOneByDiscordId(id);
+  if (exisiting) {
+    throw new Error("You have already connected your account.");
+  }
   const token = await twitter.basics.oauthRequestToken();
   await redis.set(`oauth:${token.oauth_token}`, `${token.oauth_token_secret}:${id}`, "ex", 120);
 
