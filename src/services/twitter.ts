@@ -11,9 +11,9 @@ export const twitter = new TwitterClient({
 });
 
 export async function generateAuthUrl(id: string): Promise<string> {
-  const exisiting = await findOneByDiscordId(id);
+  const existing = await findOneByDiscordId(id);
 
-  if (exisiting) {
+  if (existing) {
     throw new Error("You have already connected your account.");
   }
 
