@@ -18,7 +18,7 @@ export async function generateAuthUrl(id: string): Promise<string> {
 }
 
 export async function findTwitterUser(user_id: string | undefined): Promise<UsersLookup[]> {
-  return await twitterClient.accountsAndUsers.usersLookup({
+  return await twitter.accountsAndUsers.usersLookup({
     user_id,
   });
 }

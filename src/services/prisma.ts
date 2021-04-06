@@ -1,9 +1,16 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, User} from "@prisma/client";
+import {wrapRedis} from "./redis";
 
 export const prisma = new PrismaClient();
 
-export async function findOneByDiscordId(discord_id: string) {
-  return await prisma.user.findFirst({
-    where: {discord_id},
+/**
+ * Find a user by Discord ID
+ * @param discord_id
+ */
+export function findOneByDiscordId(discord_id: string): Promise<User | null> {
+  return wrapRedis(`user:${discord_id}`, () => {
+    return prisma.user.findFirst({
+      where: {discord_id},
+    });
   });
 }
