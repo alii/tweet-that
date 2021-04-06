@@ -12,10 +12,15 @@ export const twitter = new TwitterClient({
 
 export async function generateAuthUrl(id: string): Promise<string> {
   const exisiting = await findOneByDiscordId(id);
+
   if (exisiting) {
     throw new Error("You have already connected your account.");
   }
-  const token = await twitter.basics.oauthRequestToken();
+
+  const token = await twitter.basics.oauthRequestToken({
+    oauth_callback: process.env.OAUTH_CALLBACK || "http://localhost:3000/callback",
+  });
+
   await redis.set(`oauth:${token.oauth_token}`, `${token.oauth_token_secret}:${id}`, "ex", 120);
 
   return `https://api.twitter.com/oauth/authorize?oauth_token=${token.oauth_token}`;
