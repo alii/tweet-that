@@ -6,9 +6,11 @@ import {findOneByUidAndDiscordId, prisma} from "./services/prisma";
 import fastifyStatic from "fastify-static";
 import path from "path";
 
+const cwd = process.cwd();
+
 const app = fastify();
 
-app.register(fastifyStatic, {root: path.join(__dirname, "public")});
+app.register(fastifyStatic, {root: path.join(cwd, "public")});
 
 app.get("/callback", async (req, res) => {
   const query = callbackSchema.safeParse(req.query);
@@ -32,8 +34,7 @@ app.get("/callback", async (req, res) => {
   const existingUser = await findOneByUidAndDiscordId(discord_id, twitterAuth.user_id);
 
   if (existingUser) {
-    res.send("Already exisiting user");
-    return;
+    return res.sendFile("existing.html");
   }
 
   await prisma.user.create({
@@ -45,7 +46,7 @@ app.get("/callback", async (req, res) => {
     },
   });
 
-  res.send("You may now close the tab");
+  return res.sendFile("success.html");
 });
 
 export async function start(): Promise<void> {
