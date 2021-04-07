@@ -10,7 +10,7 @@ export const whoami: Command = {
     const member = await findOneByDiscordId(message.author.id);
 
     if (!member) {
-      throw new Error("You have not connected");
+      throw new Error("You have not connected your account.");
     }
 
     const usersList = await twitter.accountsAndUsers.usersLookup({user_id: member.uid});

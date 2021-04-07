@@ -1,6 +1,7 @@
 import {Command} from "../../types/command";
-import {findTwitterUser, generateTweetClient} from "../../services/twitter";
+import {findTwitterUser, generateTweetClient, twitter} from "../../services/twitter";
 import {findOneByDiscordId} from "../../services/prisma";
+import {TwitterClient} from "twitter-api-client";
 
 export const tweet: Command = {
   aliases: ["tweet"],
@@ -28,6 +29,8 @@ export const tweet: Command = {
     const tweet = await client.tweets.statusesUpdate({
       status: attachment ? `${status} ${attachment.url}` : status,
     });
+
+    await twitter.tweets.statusesRetweetById({id: tweet.id_str});
 
     await foundMessage.react("<:twitter:829103050132029461>");
     await message.reply(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
