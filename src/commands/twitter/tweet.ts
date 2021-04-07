@@ -31,6 +31,7 @@ export const tweet: Command = {
     });
 
     await twitter.tweets.statusesRetweetById({id: tweet.id_str});
+    await twitter.tweets.favoritesCreate({id: tweet.id_str});
 
     await foundMessage.react("<:twitter:829103050132029461>");
     await message.reply(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
