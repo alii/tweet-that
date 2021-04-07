@@ -3,8 +3,9 @@ import {login} from "./twitter/login";
 import {tweet} from "./twitter/tweet";
 import {ping} from "./util/ping";
 import {whoami} from "./twitter/whoami";
+import {invite} from "./util/invite";
 
-export const commands: Command[] = [ping, login, tweet, whoami];
+export const commands: Command[] = [ping, login, tweet, whoami, invite];
 
 const commandsWithAliases = commands.reduce((all, command) => {
   return [...new Set(command.aliases)].reduce((previous, commandName) => {
