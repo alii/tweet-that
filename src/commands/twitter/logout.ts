@@ -1,4 +1,5 @@
 import {prisma} from "../../services/prisma";
+import {redis} from "../../services/redis";
 import {Command} from "../../types/command";
 
 export const logout: Command = {
@@ -6,6 +7,8 @@ export const logout: Command = {
   aliases: ["logout", "remove"],
   inhibitors: [],
   async run(message) {
+    await redis.del(`user:${message.author.id}`);
+
     await prisma.user.delete({
       where: { discord_id: message.author.id },
     });
