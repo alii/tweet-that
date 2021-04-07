@@ -4,7 +4,7 @@ import {findOneByDiscordId} from "../../services/prisma";
 
 export const tweet: Command = {
   aliases: ["tweet"],
-  description: "Reply to a message with this comment to tweet it from your account",
+  description: "Reply to a message with this command to Tweet it from your account",
   inhibitors: [],
   async run(message) {
     const messageId = message.reference?.messageID;
