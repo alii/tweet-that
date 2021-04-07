@@ -6,7 +6,7 @@ export class StandardEmbed extends MessageEmbed {
 
     this.setTimestamp()
       .setColor("#2F3136")
-      .setFooter("Discord Bot")
+      .setFooter("Tweet That")
       .setAuthor(user.tag, user.avatarURL() || "https://cdn.discordapp.com/embed/avatars/0.png");
   }
 }
