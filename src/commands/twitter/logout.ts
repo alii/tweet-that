@@ -10,6 +10,6 @@ export const logout: Command = {
       where: { discord_id: message.author.id },
     });
 
-    await message.channel.send("Successfully removed your ")
+    await message.channel.send("Successfully removed your account");
   }
 }
