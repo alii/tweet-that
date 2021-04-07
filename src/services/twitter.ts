@@ -1,6 +1,6 @@
 import {TwitterClient, UsersLookup} from "twitter-api-client";
 import {apiKey, apiSecret, accessTokenSecret, accessToken} from "../constants";
-import {redis} from "./redis";
+import {redis, wrapRedis} from "./redis";
 import {findOneByDiscordId, prisma} from "./prisma";
 
 export const twitter = new TwitterClient({
@@ -27,7 +27,9 @@ export async function generateAuthUrl(id: string): Promise<string> {
 }
 
 export function findTwitterUser(user_id: string | undefined): Promise<UsersLookup[]> {
-  return twitter.accountsAndUsers.usersLookup({user_id});
+  return wrapRedis(`twitter:${user_id}`, () => {
+    return twitter.accountsAndUsers.usersLookup({user_id})
+  });
 }
 
 export async function generateTweetClient(id: string): Promise<TwitterClient> {
