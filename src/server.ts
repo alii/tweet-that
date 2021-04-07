@@ -51,7 +51,7 @@ app.get("/callback", async (req, res) => {
 
 export async function start(): Promise<void> {
   try {
-    await app.listen(3000);
+    await app.listen(3000, "0.0.0.0");
   } catch (err) {
     app.log.error(err);
   }
