@@ -1,7 +1,6 @@
 import {Command} from "../../types/command";
 import {findTwitterUser, generateTweetClient, twitter} from "../../services/twitter";
 import {findOneByDiscordId} from "../../services/prisma";
-import {TwitterClient} from "twitter-api-client";
 
 export const tweet: Command = {
   aliases: ["tweet"],
