@@ -25,14 +25,23 @@ export const tweet: Command = {
       ? `@${twitterUser["screen_name"] + " " + foundMessage.content}`
       : foundMessage.content;
 
-    const tweet = await client.tweets.statusesUpdate({
-      status: attachment ? `${status} ${attachment.url}` : status,
+    const tweet = await client.tweets
+      .statusesUpdate({
+        status: attachment ? `${status} ${attachment.url}` : status,
+      })
+      .catch(e => {
+        throw new Error(JSON.parse(e.data).errors[0].message);
+      });
+    if (!tweet) {
+      return;
+    }
+    await twitter.tweets.statusesRetweetById({id: tweet.id_str}).catch(e => {
+      throw new Error(JSON.parse(e.data).errors[0].message);
+    });
+    await twitter.tweets.favoritesCreate({id: tweet.id_str}).catch(e => {
+      throw new Error(JSON.parse(e.data).errors[0].message);
     });
 
-    await twitter.tweets.statusesRetweetById({id: tweet.id_str});
-    await twitter.tweets.favoritesCreate({id: tweet.id_str});
-
-    await foundMessage.react("<:twitter:829103050132029461>");
     await message.reply(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
   },
 };
