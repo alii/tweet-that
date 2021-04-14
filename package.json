@@ -2,8 +2,8 @@
   "name": "template",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "repository": "https://github.com/blossomcommunity/template.git",
-  "author": "Jack LaFond <jack.lafond@icloud.com>",
+  "repository": "https://github.com/alii/tweet-that",
+  "author": "Alistair Smith <alistair@edge.gg> & Rhys Maughan <r.maughan93@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/ioredis": "^4.22.0",
