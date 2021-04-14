@@ -12,4 +12,4 @@ A Typescript Discord bot that allows you to Tweet messages you reply to in disco
 | t!invite | Replies with an invite link to add the bot to another server. |
 | t!logout | Removes your account for the database and delete your data. |
 
-Made with <3 by [@maughan](https://www.github.com/maughan) & [@alii](https://www.github.com/alii)
+Made with 💖 by [@maughan](https://www.github.com/maughan) & [@alii](https://www.github.com/alii)
