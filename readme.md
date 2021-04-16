@@ -1,6 +1,8 @@
 ![Tweet That Logo](https://logodix.com/logo/512427.png)
 # Tweet That
 
+[Request Features](https://github.com/alii/tweet-that/discussions/6)
+
 A Typescript Discord bot that allows you to Tweet messages you reply to in discord!
 
 ### Commands
